@@ -87,43 +87,44 @@ def validate_data(df):
         else:
             print("  Clicks <= Impressions (logical)")
 
-        # Conversions should not exceed clicks
-        if 'conversions' in df.columns and 'clicks' in df.columns:
-            invalid = (df['conversions'] > df['clicks']).sum()
-            if invalid > 0:
-                issues.append(f"WARNING: {invalid} rows where conversions > clicks")
-            else:
-                print("✓ Conversions <= Clicks (logical)")
-
-        # Check 8: Check for missing values summary
-        missing_summary = df.isnull().sum()
-        if missing_summary.sum() > 0:
-            print("\nMissing values found:")
-            for col, count in missing_summary[missing_summary > 0].items():
-                pct = (count / len(df)) * 100
-                print(f"  - {col}: {count} ({pct:.1f}%)")
-                issues.append(f"INFO: {col} has {count} missing values ({pct:.1f}%)")
+    # Conversions should not exceed clicks
+    if 'conversions' in df.columns and 'clicks' in df.columns:
+        invalid = (df['conversions'] > df['clicks']).sum()
+        if invalid > 0:
+            issues.append(f"WARNING: {invalid} rows where conversions > clicks")
         else:
-            print("✓ No missing values")
+            print("  Conversions <= Clicks (logical)")
 
-        # Determine if validation passed
-        critical_issues = [i for i in issues if i.startswith('ERROR')]
-        valid = len(critical_issues) == 0
+    # Check 8: Check for missing values summary
+    missing_summary = df.isnull().sum()
+    if missing_summary.sum() > 0:
+        print("\nMissing values found:")
+        for col, count in missing_summary[missing_summary > 0].items():
+            pct = (count / len(df)) * 100
+            print(f"  - {col}: {count} ({pct:.1f}%)")
+            issues.append(f"INFO: {col} has {count} missing values ({pct:.1f}%)")
+    else:
+        print("  No missing values")
 
-        print("\n" + "=" * 50)
-        if valid:
-            print("✓ VALIDATION PASSED")
-        else:
-            print("✗ VALIDATION FAILED")
-        print(f"Total issues found: {len(issues)}")
-        print("=" * 50 + "\n")
+    # Determine if validation passed
+    critical_issues = [i for i in issues if i.startswith('ERROR')]
+    valid = len(critical_issues) == 0
 
-        return {
-            'valid': valid,
-            'issues': issues,
-            'row_count': len(df),
-            'column_count': len(df.columns)
-        }
+    print("\n" + "=" * 50)
+    if valid:
+        print("  VALIDATION PASSED")
+    else:
+        print("  VALIDATION FAILED")
+    print(f"Total issues found: {len(issues)}")
+    print("=" * 50 + "\n")
+
+    return {
+        'valid': valid,
+        'issues': issues,
+        'row_count': len(df),
+        'column_count': len(df.columns)
+    }
+
 
 if __name__ == "__main__":
     # Test with sample data
