@@ -8,12 +8,7 @@ This script runs the complete data pipeline:
 4. Transform and create features
 5. Store processed data
 
-Usage:
-    python run_pipeline.py
 """
-
-import sys
-from pathlib import Path
 
 from src.data.fetch_data import generate_realistic_facebook_ads_data
 from src.data.validate_data import validate_data
