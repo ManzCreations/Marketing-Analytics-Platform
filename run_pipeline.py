@@ -106,6 +106,9 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         df_mmm_features = engineer.fit_transform(df_clean, target_col='revenue')
         X_train, X_test, y_train, y_test = engineer.train_test_split(df_mmm_features, test_size=0.2)
 
+        # Get campaign feature names (those with adstock_log)
+        campaign_features = [col for col in engineer.feature_columns_ if 'adstock_log' in col]
+
         print("✓ Features ready\n")
 
         # Step 7: Train MMM Model
@@ -113,7 +116,7 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         print("-" * 60)
 
         mmm = MarketingMixModel(model_type='ridge', scale_features=True)
-        mmm.fit(X_train, y_train, campaign_features=engineer.campaign_features_,
+        mmm.fit(X_train, y_train, campaign_features=campaign_features,
                 tune_hyperparameters=True, cv_folds=5)
 
         print("✓ Model trained\n")
