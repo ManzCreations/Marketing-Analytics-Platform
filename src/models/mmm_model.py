@@ -155,7 +155,7 @@ class MarketingMixModel:
                 columns=X_train.columns,
                 index=X_train.index
             )
-            print("  ✓ Features standardized (mean=0, std=1)")
+            print("  Features standardized (mean=0, std=1)")
 
         # Hyperparameter tuning
         if tune_hyperparameters and self.alpha is None:
@@ -203,7 +203,7 @@ class MarketingMixModel:
             self.best_params_ = grid_search.best_params_
             self.cv_results_ = pd.DataFrame(grid_search.cv_results_)
 
-            print(f"\n✓ Best parameters found:")
+            print(f"\n Best parameters found:")
             for param, value in self.best_params_.items():
                 print(f"    {param}: {value}")
             print(f"  Cross-validation MAE: ${-grid_search.best_score_:,.2f}")
@@ -294,7 +294,7 @@ class MarketingMixModel:
         r2 = r2_score(y_test, y_pred)
         mae = mean_absolute_error(y_test, y_pred)
         rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-        mape = np.mean(np.abs((y_test - y_pred) / y_test)) * 100
+        mape = np.mean(np.abs((y_test - y_pred) / y_test))
 
         # Store metrics
         self.metrics_ = {
@@ -387,7 +387,7 @@ class MarketingMixModel:
 
         # Calculate percentages
         total_revenue = df_contrib['Total_Contribution'].sum() + baseline_revenue
-        df_contrib['Percentage'] = (df_contrib['Total_Contribution'] / total_revenue * 100)
+        df_contrib['Percentage'] = (df_contrib['Total_Contribution'] / total_revenue)
 
         # Filter to campaign features only
         df_campaigns = df_contrib[df_contrib['Feature'].isin(self.campaign_features)].copy()
@@ -577,4 +577,4 @@ if __name__ == "__main__":
     # Get contributions
     contributions = mmm.get_channel_contributions(X_test)
 
-    print("\n✅ MMM model test completed successfully!")
+    print("\n MMM model test completed successfully!")

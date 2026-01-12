@@ -153,7 +153,7 @@ def store_mmm_results(
 
     # 1. Channel Contributions
     contributions.to_sql('mmm_channel_contributions', conn, if_exists='replace', index=False)
-    print(f"\n✓ mmm_channel_contributions ({len(contributions)} rows)")
+    print(f"\n  mmm_channel_contributions ({len(contributions)} rows)")
 
     # 2. Budget Optimization
     df_optimization = pd.DataFrame({
@@ -167,24 +167,24 @@ def store_mmm_results(
         df_optimization['Revenue_Increase_Pct'] = comp.get('revenue_increase_pct', 0)
 
     df_optimization['Optimal_Pct'] = (df_optimization['Optimal_Spend'] /
-                                       df_optimization['Optimal_Spend'].sum() * 100)
+                                       df_optimization['Optimal_Spend'].sum())
 
     df_optimization.to_sql('mmm_budget_optimization', conn, if_exists='replace', index=False)
-    print(f"✓ mmm_budget_optimization ({len(df_optimization)} rows)")
+    print(f"  mmm_budget_optimization ({len(df_optimization)} rows)")
 
     # 3. Budget Scenarios
     scenarios.to_sql('mmm_budget_scenarios', conn, if_exists='replace', index=False)
-    print(f"✓ mmm_budget_scenarios ({len(scenarios)} rows)")
+    print(f"  mmm_budget_scenarios ({len(scenarios)} rows)")
 
     # 4. Model Performance
     df_metrics = pd.DataFrame([metrics])
     df_metrics.to_sql('mmm_model_performance', conn, if_exists='replace', index=False)
-    print(f"✓ mmm_model_performance (1 row)")
+    print(f"  mmm_model_performance (1 row)")
 
     # 5. Model Coefficients
     coefficients_df = mmm_model.get_coefficients_df()
     coefficients_df.to_sql('mmm_model_coefficients', conn, if_exists='replace', index=False)
-    print(f"✓ mmm_model_coefficients ({len(coefficients_df)} rows)")
+    print(f"  mmm_model_coefficients ({len(coefficients_df)} rows)")
 
     # 6. Predictions
     y_pred = mmm_model.predict(X_test)
@@ -199,7 +199,7 @@ def store_mmm_results(
     })
 
     df_predictions.to_sql('mmm_predictions', conn, if_exists='replace', index=False)
-    print(f"✓ mmm_predictions ({len(df_predictions)} rows)")
+    print(f"  mmm_predictions ({len(df_predictions)} rows)")
 
     conn.close()
 

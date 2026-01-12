@@ -55,7 +55,7 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         validation_results = validate_data(df_raw)
 
         if not validation_results['valid']:
-            print("\n⚠️  Validation found issues (will be fixed in cleaning)")
+            print("\n️  Validation found issues (will be fixed in cleaning)")
             print()
 
         # ===========================
@@ -109,7 +109,7 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         # Get campaign feature names (those with adstock_log)
         campaign_features = [col for col in engineer.feature_columns_ if 'adstock_log' in col]
 
-        print("✓ Features ready\n")
+        print(" Features ready\n")
 
         # Step 7: Train MMM Model
         print("Step 7: Train MMM Model")
@@ -119,14 +119,14 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         mmm.fit(X_train, y_train, campaign_features=campaign_features,
                 tune_hyperparameters=True, cv_folds=5)
 
-        print("✓ Model trained\n")
+        print(" Model trained\n")
 
         # Step 8: Evaluate
         print("Step 8: Evaluate Model")
         print("-" * 60)
 
         metrics = mmm.evaluate(X_test, y_test)
-        print("✓ Evaluation complete\n")
+        print(" Evaluation complete\n")
 
         # Step 9: Channel Attribution
         print("Step 9: Channel Attribution")
@@ -139,7 +139,7 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         df_spend_test = df_spend[(df_spend.index >= test_start) & (df_spend.index <= test_end)]
 
         contributions = mmm.get_channel_contributions(X_test, original_spend_data=df_spend_test)
-        print("✓ Attribution complete\n")
+        print(" Attribution complete\n")
 
         # Step 10: Budget Optimization
         print("Step 10: Budget Optimization")
@@ -156,7 +156,7 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
                                                  current_total * 1.1, current_total * 1.2,
                                                  current_total * 1.5], current_spend)
 
-        print("✓ Optimization complete\n")
+        print(" Optimization complete\n")
 
         # Store MMM Results
         store_mmm_results(mmm, engineer, metrics, contributions, optimization_result,
@@ -167,7 +167,7 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         # ===========================
         print("\n")
         print("=" * 60)
-        print("✓✓✓ PIPELINE COMPLETED SUCCESSFULLY ✓✓✓")
+        print("*** PIPELINE COMPLETED SUCCESSFULLY ***")
         print("=" * 60)
         print()
         print(f"Processed {len(df_final)} rows with {len(df_final.columns)} columns")
@@ -177,18 +177,18 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         print("Saved files:")
         for key, path in saved_files.items():
             if key in ['csv', 'database', 'summary']:
-                print(f"  📄 {key}: {path}")
+                print(f"   {key}: {path}")
         print()
         print("Key metrics:")
-        print(f"  💰 Total Spend: ${df_final['spend'].sum():,.2f}")
-        print(f"  💵 Total Revenue: ${df_final['revenue'].sum():,.2f}")
-        print(f"  📈 Overall ROAS: {df_final['revenue'].sum() / df_final['spend'].sum():.2f}x")
-        print(f"  🎯 Total Conversions: {df_final['conversions'].sum():,}")
+        print(f"  Total Spend: ${df_final['spend'].sum():,.2f}")
+        print(f"  Total Revenue: ${df_final['revenue'].sum():,.2f}")
+        print(f"  Overall ROAS: {df_final['revenue'].sum() / df_final['spend'].sum():.2f}x")
+        print(f"  Total Conversions: {df_final['conversions'].sum():,}")
         print()
         print("MMM Results:")
-        print(f"  🤖 Model R²: {metrics['r2']:.3f}")
+        print(f"  Model R²: {metrics['r2']:.3f}")
         print(
-            f"  💡 Expected Revenue Lift: +{optimization_result.get('comparison', {}).get('revenue_increase_pct', 0):.1f}%")
+            f"  Expected Revenue Lift: +{optimization_result.get('comparison', {}).get('revenue_increase_pct', 0):.1f}%")
         print()
         print("=" * 60)
         print()
@@ -196,7 +196,7 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         return df_final, saved_files
 
     except Exception as e:
-        print(f"\n❌ Error in pipeline: {str(e)}")
+        print(f"\n Error in pipeline: {str(e)}")
         import traceback
         traceback.print_exc()
         return None, None
@@ -207,7 +207,7 @@ if __name__ == "__main__":
     df, files = run_complete_pipeline(n_days=90, output_dir='data')
 
     if df is not None:
-        print("✅ Pipeline completed successfully!")
+        print(" Pipeline completed successfully!")
         print("\nDatabase tables created:")
         print("  - facebook_ads (original data)")
         print("  - mmm_channel_contributions")

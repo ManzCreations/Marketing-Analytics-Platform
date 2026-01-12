@@ -228,10 +228,10 @@ class BudgetOptimizer:
         )
 
         if not result.success:
-            print(f"  ⚠️  Warning: Optimization did not fully converge")
+            print(f"  ️  Warning: Optimization did not fully converge")
             print(f"     Message: {result.message}")
         else:
-            print(f"  ✓ Optimization converged successfully")
+            print(f"   Optimization converged successfully")
 
         # Extract optimal allocation
         optimal_spend = {}
@@ -256,7 +256,7 @@ class BudgetOptimizer:
 
             # Calculate improvements
             revenue_increase = optimal_revenue - current_revenue
-            revenue_increase_pct = (revenue_increase / current_revenue) * 100
+            revenue_increase_pct = (revenue_increase / current_revenue)
 
             comparison = {
                 'current_revenue': current_revenue,
@@ -440,4 +440,4 @@ if __name__ == "__main__":
     scenarios = [90000, 100000, 110000, 120000, 150000]
     df_scenarios = optimizer.scenario_analysis(scenarios, current_spend)
 
-    print("\n✅ Budget optimizer test completed successfully!")
+    print("\n Budget optimizer test completed successfully!")
