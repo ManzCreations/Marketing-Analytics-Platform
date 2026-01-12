@@ -66,30 +66,29 @@ Daily marketing data with:
 ## Project Structure
 
 ```
-marketing-mix-model/
+Marketing-Analytics-Platform/
 │
 ├── run_pipeline.py                    # Main script - run this!
-├── store_data_enhanced.py            # Database storage functions
-├── fetch_data_enhanced.py            # Synthetic data generation
 │
 ├── src/
+|   ├── __init__.py                    # Makes src a Python package
+|
+|   └── data/
+│       ├── fetch_data.py              # Original simple data generation
+│       ├── validate_data.py           # Data validation (required columns, types, logic)
+│       ├── clean_data.py              # Data cleaning (missing values, outliers, negatives)
+│       ├── transform_data.py          # Basic transformations (CTR, CVR, ROAS, features)
+│       └── store_data_enhanced.py     # Database storage with MMM results
+|
 │   └── models/
-│       ├── feature_engineering.py    # Adstock, saturation, time features
-│       ├── mmm_model.py             # Ridge regression model
-│       └── optimizer.py             # Budget optimization
+│       ├── feature_engineering.py     # Adstock, saturation, time features
+│       ├── mmm_model.py               # Ridge regression model
+│       └── optimizer.py               # Budget optimization
 │
-├── data/                             # Created when you run pipeline
-│   ├── marketing_data.db            # SQLite database (main output)
-│   ├── facebook_ads_processed.csv   # CSV export
-│   └── data_summary.txt             # Text summary
-│
-└── README.md                         # This file
-```
+├── README.md                          # This file
+└── requirements.txt                   # Required dependencies
 
-**Note:** The pipeline also expects these files from the original data processing (should be in project root or `/mnt/user-data/uploads/`):
-- `validate_data.py` - Data validation
-- `clean_data.py` - Data cleaning
-- `transform_data.py` - Basic transformations
+```
 
 ---
 
