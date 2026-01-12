@@ -581,13 +581,13 @@ MIT License - feel free to use for commercial or personal projects.
 
 ## Contact & Support
 
-Questions? Open an issue on GitHub or contact [your contact info].
+Questions? Open an issue on GitHub or contact stevenmanz063018@gmail.com.
 
 ---
 
 ## Acknowledgments
 
-Built for marketing data science interviews and real-world MMM applications.
+Built for marketing data science and real-world MMM applications.
 
 Inspired by:
 - Google's Meridian MMM
