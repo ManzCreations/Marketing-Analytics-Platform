@@ -10,8 +10,6 @@ This module creates sample Facebook Ads data with realistic marketing dynamics:
 - Budget changes and pauses
 - External shocks and noise
 - Competitive effects
-
-Created for MMM interview demonstration.
 """
 
 import pandas as pd
