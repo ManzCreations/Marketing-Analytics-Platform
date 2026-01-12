@@ -153,7 +153,7 @@ def load_data_from_db(db_path='data/marketing_data.db', table_name='facebook_ads
 
 if __name__ == "__main__":
     # Test the full pipeline
-    from fetch_data import generate_facebook_ads_sample
+    from fetch_data import generate_realistic_facebook_ads_data
     from validate_data import validate_data
     from clean_data import clean_data
     from transform_data import transform_data
@@ -167,7 +167,7 @@ if __name__ == "__main__":
     # Step 1: Fetch
     print("STEP 1: FETCHING DATA")
     print("=" * 50)
-    df_raw = generate_facebook_ads_sample(n_days=90)
+    df_raw = generate_realistic_facebook_ads_data(n_days=90)
     print()
 
     # Step 2: Validate

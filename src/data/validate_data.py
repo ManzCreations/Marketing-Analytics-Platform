@@ -128,9 +128,9 @@ def validate_data(df):
 
 if __name__ == "__main__":
     # Test with sample data
-    from fetch_data import generate_facebook_ads_sample
+    from fetch_data import generate_realistic_facebook_ads_data
 
-    df = generate_facebook_ads_sample(n_days=30)
+    df = generate_realistic_facebook_ads_data(n_days=30)
     results = validate_data(df)
 
     print("\nValidation results:")

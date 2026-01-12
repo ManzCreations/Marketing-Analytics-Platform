@@ -142,11 +142,11 @@ def clean_data(df):
 
 if __name__ == "__main__":
     # Test with sample data
-    from fetch_data import generate_facebook_ads_sample
+    from fetch_data import generate_realistic_facebook_ads_data
     from validate_data import validate_data
 
     # Generate and validate data
-    df = generate_facebook_ads_sample(n_days=30)
+    df = generate_realistic_facebook_ads_data(n_days=30)
     validation_results = validate_data(df)
 
     # Clean data

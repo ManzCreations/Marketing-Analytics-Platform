@@ -211,7 +211,7 @@ def transform_data(df):
 
 if __name__ == "__main__":
     # Test with sample data
-    from fetch_data import generate_facebook_ads_sample
+    from fetch_data import generate_realistic_facebook_ads_data
     from validate_data import validate_data
     from clean_data import clean_data
 
@@ -219,7 +219,7 @@ if __name__ == "__main__":
     print("Running full data pipeline...\n")
 
     # Step 1: Fetch (generate sample data)
-    df_raw = generate_facebook_ads_sample(n_days=90)
+    df_raw = generate_realistic_facebook_ads_data(n_days=90)
 
     # Step 2: Validate
     validation_results = validate_data(df_raw)
