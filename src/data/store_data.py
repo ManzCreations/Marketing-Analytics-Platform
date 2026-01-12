@@ -1,10 +1,12 @@
 """
-Data storage module.
+Data storage module - Enhanced with MMM results.
 
 This module handles saving processed data to various formats.
+Now includes MMM model results storage.
 """
 
 import pandas as pd
+import numpy as np
 import sqlite3
 from pathlib import Path
 
@@ -116,6 +118,94 @@ def store_data(df, output_dir='data'):
     print("=" * 50 + "\n")
 
     return saved_files
+
+
+def store_mmm_results(
+    mmm_model,
+    engineer,
+    metrics,
+    contributions,
+    optimization_result,
+    scenarios,
+    X_test,
+    y_test,
+    df_transformed,
+    output_dir='data'
+):
+    """
+    Store MMM results to the same database.
+
+    Adds MMM tables:
+    - mmm_channel_contributions
+    - mmm_budget_optimization
+    - mmm_budget_scenarios
+    - mmm_model_performance
+    - mmm_model_coefficients
+    - mmm_predictions
+    """
+
+    print("=" * 50)
+    print("STORING MMM RESULTS")
+    print("=" * 50)
+
+    db_file = Path(output_dir) / 'marketing_data.db'
+    conn = sqlite3.connect(db_file)
+
+    # 1. Channel Contributions
+    contributions.to_sql('mmm_channel_contributions', conn, if_exists='replace', index=False)
+    print(f"\n✓ mmm_channel_contributions ({len(contributions)} rows)")
+
+    # 2. Budget Optimization
+    df_optimization = pd.DataFrame({
+        'Campaign': list(optimization_result['optimal_spend'].keys()),
+        'Optimal_Spend': list(optimization_result['optimal_spend'].values()),
+    })
+
+    if 'comparison' in optimization_result and optimization_result['comparison']:
+        comp = optimization_result['comparison']
+        df_optimization['Expected_Revenue'] = comp.get('optimal_revenue', 0)
+        df_optimization['Revenue_Increase_Pct'] = comp.get('revenue_increase_pct', 0)
+
+    df_optimization['Optimal_Pct'] = (df_optimization['Optimal_Spend'] /
+                                       df_optimization['Optimal_Spend'].sum() * 100)
+
+    df_optimization.to_sql('mmm_budget_optimization', conn, if_exists='replace', index=False)
+    print(f"✓ mmm_budget_optimization ({len(df_optimization)} rows)")
+
+    # 3. Budget Scenarios
+    scenarios.to_sql('mmm_budget_scenarios', conn, if_exists='replace', index=False)
+    print(f"✓ mmm_budget_scenarios ({len(scenarios)} rows)")
+
+    # 4. Model Performance
+    df_metrics = pd.DataFrame([metrics])
+    df_metrics.to_sql('mmm_model_performance', conn, if_exists='replace', index=False)
+    print(f"✓ mmm_model_performance (1 row)")
+
+    # 5. Model Coefficients
+    coefficients_df = mmm_model.get_coefficients_df()
+    coefficients_df.to_sql('mmm_model_coefficients', conn, if_exists='replace', index=False)
+    print(f"✓ mmm_model_coefficients ({len(coefficients_df)} rows)")
+
+    # 6. Predictions
+    y_pred = mmm_model.predict(X_test)
+    test_start_idx = -len(X_test)
+    test_dates = df_transformed['date'].iloc[test_start_idx:].values
+
+    df_predictions = pd.DataFrame({
+        'date': test_dates,
+        'actual_revenue': y_test.values,
+        'predicted_revenue': y_pred,
+        'error': y_test.values - y_pred
+    })
+
+    df_predictions.to_sql('mmm_predictions', conn, if_exists='replace', index=False)
+    print(f"✓ mmm_predictions ({len(df_predictions)} rows)")
+
+    conn.close()
+
+    print("\n" + "=" * 50)
+    print(f"MMM results saved to: {db_file}")
+    print("=" * 50 + "\n")
 
 
 def load_data_from_csv(csv_path='data/facebook_ads_processed.csv'):
