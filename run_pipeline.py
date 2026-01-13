@@ -132,11 +132,23 @@ def run_complete_pipeline(n_days=90, output_dir='data'):
         print("Step 9: Channel Attribution")
         print("-" * 60)
 
-        df_spend = df_clean.pivot_table(index='date', columns='campaign_name',
-                                        values='spend', aggfunc='sum', fill_value=0)
-        test_start = df_mmm_features.iloc[len(X_train)]['date']
-        test_end = df_mmm_features.iloc[-1]['date']
-        df_spend_test = df_spend[(df_spend.index >= test_start) & (df_spend.index <= test_end)]
+        test_start_date = df_mmm_features.iloc[len(X_train)]['date']
+        test_end_date = df_mmm_features.iloc[-1]['date']
+
+        # Filter df_clean to test period
+        df_clean_test = df_clean[
+            (df_clean['date'] >= test_start_date) &
+            (df_clean['date'] <= test_end_date)
+            ].copy()
+
+        # Create spend pivot from the ACTUAL cleaned data
+        df_spend_test = df_clean_test.pivot_table(
+            index='date',
+            columns='campaign_name',
+            values='spend',
+            aggfunc='sum',
+            fill_value=0
+        )
 
         contributions = mmm.get_channel_contributions(X_test, original_spend_data=df_spend_test)
         print(" Attribution complete\n")
